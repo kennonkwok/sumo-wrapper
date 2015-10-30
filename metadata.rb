@@ -1,0 +1,10 @@
+name 'sumo-wrapper'
+maintainer 'The Authors'
+maintainer_email 'you@example.com'
+license 'all_rights'
+description 'Installs/Configures sumo-wrapper'
+long_description 'Installs/Configures sumo-wrapper'
+version '0.1.0'
+
+depends 'packagecloud'
+depends 'sumologic-collector'

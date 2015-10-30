@@ -1,0 +1,63 @@
+driver_config:
+  digitalocean_access_token: <%= ENV['DIGITALOCEAN_API_TOKEN'] %>
+  aws_ssh_key_id: <%= ENV['AWS_KEYPAIR_NAME'] %>
+  instance_type: <%= ENV['EC2_FLAVOR_ID'] %>
+  availability_zone: <%= ENV['AWS_AVAILABILITY_ZONE'] %>
+  retryable_tries: 120
+
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: ubuntu-14.04
+    driver:
+      name: digitalocean
+    driver_config:
+      size: 2gb
+      image: ubuntu-14-04-x64
+      region: <%= ENV['DIGITALOCEAN_REGION'] %>
+      ssh_key_ids: <%= ENV['DIGITALOCEAN_SSH_KEYS'] %>
+      ssh_key: <%= ENV['DIGITALOCEAN_SSH_KEY_PATH'] %>
+  - name: centos-6-5-x64
+    driver:
+      name: digitalocean
+    driver_config:
+      size: 2gb
+      region: <%= ENV['DIGITALOCEAN_REGION'] %>
+      ssh_key_ids: <%= ENV['DIGITALOCEAN_SSH_KEYS'] %>
+      ssh_key: <%= ENV['DIGITALOCEAN_SSH_KEY_PATH'] %>
+  - name: centos-7-0-x64
+    driver:
+      name: digitalocean
+    driver_config:
+      size: 2gb
+      ipv6: true
+      region: <%= ENV['DIGITALOCEAN_REGION'] %>
+      ssh_key_ids: <%= ENV['DIGITALOCEAN_SSH_KEYS'] %>
+      ssh_key: <%= ENV['DIGITALOCEAN_SSH_KEY_PATH'] %>
+  - name: windows-2008r2
+    driver:
+      name: ec2
+      image_id: ami-a7bbcac2
+      instance_type: m3.medium
+    transport:
+      username: administrator
+      ssh_key: <%= ENV['EC2_SSH_KEY_PATH'] %>
+  - name: windows-2012r2
+    driver:
+      name: ec2
+      image_id: ami-1df0ac78
+      instance_type: m3.medium
+    transport:
+      username: administrator
+      ssh_key: <%= ENV['EC2_SSH_KEY_PATH'] %>
+
+suites:
+ - name: default
+   data_bags_path: test/integration/data_bags
+   run_list:
+     - recipe[data-bag-faker]
+     - recipe[sumo-wrapper::default]
+   attributes:
+     SUMO_ACCESS_ID: <%= ENV['SUMO_ACCESS_ID'] %>
+     SUMO_ACCESS_KEY: <%= ENV['SUMO_ACCESS_KEY'] %>
